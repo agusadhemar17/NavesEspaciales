@@ -1,0 +1,102 @@
+import naves.*
+
+describe "naves" {
+
+	var ave1 = new NaveBaliza(velocidad = 12000, direccion = -8, combustible = 12000, color = "Rojo")
+	var nave2 = new NaveDePasajeros(velocidad = 8000, direccion = 0, combustible = 14000, cantidadPasajeros = 7, cantidadRacionesComida = 4, cantidadRacionesBebida = 6)
+	var comb = new NavesDeCombate(velocidad = 2000, direccion = 6, combustible = 2000, visible = true, misilesDesplegados = false)
+	var hospi = new NaveHospital(velocidad = 300, direccion = 10, combustible = 200000, cantidadPasajeros = 3, cantidadRacionesComida = 6, cantidadRacionesBebida = 12)
+	var sigi = new NaveCombateSigilosa(velocidad = 200, direccion = -2, combustible = 2000, visible = true, misilesDesplegados = false)
+
+	test "testX" {
+		ave1.acelerar(120)
+		assert.equals(12120, ave1.velocidad())
+	}
+//TRANQUILIDAD
+	test "estan tranquilas" {
+		assert.that(ave1.estaTranquila())
+		assert.that(nave2.estaTranquila())
+		assert.notThat(comb.estaTranquila())
+		assert.that(hospi.estaTranquila())
+		assert.notThat(sigi.estaTranquila())
+	}
+// PREPARAN VIAJES
+	test "preparar viajes ave1" {
+		ave1.prepararViaje()
+		assert.equals("verde", ave1.colorBaliza())
+		assert.equals(0, ave1.direccion())
+	}
+
+	test "preparar viajes nave2" {
+		nave2.prepararViaje()
+		assert.equals(32, nave2.cantidadRacionesComida())
+		assert.equals(48, nave2.cantidadRacionesBebida())
+		assert.equals(1, nave2.direccion())
+	}
+
+	test "preparar viajes comb" {
+		comb.prepararViaje()
+		assert.equals(22000, comb.velocidad())
+		assert.that(comb.estaInvisible())
+		assert.notThat(comb.misilesDesplegados())
+		assert.equals([ "Saliendo en Mision" ], comb.mensajesEmitidos())
+		assert.that(comb.esEscueta())
+	}
+
+	test "preparar viajes hospi" {
+		hospi.prepararViaje()
+		assert.equals(18, hospi.cantidadRacionesComida())
+		assert.equals(30, hospi.cantidadRacionesBebida())
+		assert.equals(10, hospi.direccion())
+	}
+
+	test "preparar viajes sigi" {
+		sigi.prepararViaje()
+		assert.equals(20200, sigi.velocidad())
+		assert.that(sigi.estaInvisible())
+		assert.notThat(sigi.misilesDesplegados())
+		assert.equals([ "Saliendo en Mision" ], sigi.mensajesEmitidos())
+		assert.that(sigi.esEscueta())
+	}
+////RECIBEN AMENAZAS
+
+	test "recibe amenazas ave1" {
+		ave1.recibirAmenaza()
+		assert.equals("rojo", ave1.colorBaliza())
+		assert.equals(10, ave1.direccion())
+	}
+
+	test "recibe amenazas nave2" {
+		nave2.recibirAmenaza()
+		assert.equals(16000,nave2.velocidad())
+		assert.equals(11, nave2.cantidadRacionesComida())
+		assert.equals(20, nave2.cantidadRacionesBebida())
+		
+	}
+
+	test "recibe amenazas comb" {
+		comb.recibirAmenaza()
+		assert.equals(8, comb.direccion())
+		assert.equals([ "Amenaza Recibida" ], comb.mensajesEmitidos())
+		assert.that(comb.esEscueta())
+	}
+
+
+	test "recibe amenazas hospi" {
+		hospi.recibirAmenaza()
+		assert.equals(9, hospi.cantidadRacionesComida())
+		assert.equals(18, hospi.cantidadRacionesBebida())
+		assert.equals(600, hospi.velocidad())
+	}
+
+	test "recibe amenazas sigi" {
+		sigi.recibirAmenaza()
+		assert.equals(0, sigi.direccion())
+		assert.equals([ "Amenaza Recibida" ], sigi.mensajesEmitidos())
+		assert.that(sigi.esEscueta())
+	}
+
+
+
+}
+
